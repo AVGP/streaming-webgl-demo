@@ -66,16 +66,18 @@ button.addEventListener('click', function() {
       }
 
       // Writing the bytes that have just arrived into our vertices array
-      modelBuffer.set(result.value, byteOffset)
-      byteOffset += result.value.length
-      bytePerSec += result.value.length
-      bytesReceived = byteOffset
+      requestIdleCallback(function() {
+        modelBuffer.set(result.value, byteOffset)
+        byteOffset += result.value.length
+        bytePerSec += result.value.length
+        bytesReceived = byteOffset
 
-      // Make sure we only draw what we've got
-      positionsReceived = Math.floor(byteOffset / 12) // 3 Floats, 4 bytes each = 1 position (x,y,z)
-      var trianglesReady = Math.floor(positionsReceived / 3)
-      geometry.setDrawRange(0, positionsReceived - 1)
-      geometry.attributes.position.needsUpdate = true
+        // Make sure we only draw what we've got
+        positionsReceived = Math.floor(byteOffset / 12) // 3 Floats, 4 bytes each = 1 position (x,y,z)
+        var trianglesReady = Math.floor(positionsReceived / 3)
+        geometry.setDrawRange(0, positionsReceived - 1)
+        geometry.attributes.position.needsUpdate = true
+      })
 
       // Read again...
       return reader.read()
