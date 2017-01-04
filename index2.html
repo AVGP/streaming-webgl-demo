@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="viewport" value="width=device-width">
+  <meta charset="utf8">
+  <style>
+    .warn {
+      background-color: #ffc;
+      border: 1px solid black;
+      padding: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Streaming a WebGL model</h1>
+  <div class="warn">
+    This demo relies on the following experimental APIs that are not available in all browser yet:
+    <ul>
+      <li><a href="https://streams.spec.whatwg.org/">Streams API</a> for streaming data</li>
+      <li><a href="https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer">SharedArrayBuffer</a> to share the binary data between the main thread and a worker</li>
+      <li><a href="https://developer.mozilla.org/de/docs/Web/API/Window/requestIdleCallback">requestIdleCallback</a> to make sure to only carry out work when the CPU is available for more work</li>
+    </ul>
+  </div>
+  <div id="status"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r83/three.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.4/numeral.min.js"></script>
+  <script src="app2.js"></script>
+</body>
+</html>
