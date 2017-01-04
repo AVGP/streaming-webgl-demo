@@ -5,7 +5,6 @@ var statusOutput = document.getElementById('status')
 var scene = new THREE.Scene()
 var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000)
 camera.position.set(0, 2, 8)
-//camera.position.set(-180, 50, 250)
 
 var renderer = new THREE.WebGLRenderer()
 renderer.setSize(dimensions, dimensions)
