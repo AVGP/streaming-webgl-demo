@@ -14,7 +14,7 @@ var material = new THREE.MeshBasicMaterial({wireframe: true})
 var SIZE = 5476284 // I'm lazy, so this is the hardcoded amount of Float32 we will download in total
 var modelVertices = new Float32Array(SIZE) // holds the vertices
 var modelBuffer = new Uint8Array(modelVertices.buffer) // this is where we will put the bytes as they arrive
-var bytePerSec = 0, bytesReceived = 0
+var bytePerSec = 0, bytesReceived = 0, totalFrames = 0, loadStarted = false
 
 var geometry = new THREE.BufferGeometry()
 geometry.addAttribute('position', new THREE.BufferAttribute(modelVertices, 3))
@@ -44,6 +44,7 @@ button.addEventListener('click', function() {
   *) Well, I use an Uint8Array view on the ArrayBuffer that backs the Float32Array, but that's a detail.
   */
   fetch('plane.bin').then((response) => {
+    loadStarted = true
     if(!response.body || !response.body.getReader) {
       alert('Sorry, your browser does not seem to have the Streams API yet :(')
       return response.blob()
@@ -57,7 +58,8 @@ button.addEventListener('click', function() {
       if(result.done) {
         var t1 = performance.now()
         var output = document.createElement('div')
-        output.textContent = `Ready after ${((t1 - t0) / 1000).toFixed(2)} seconds`
+        var secondsTaken = (t1 - t0) / 1000
+        output.textContent = `Ready after ${secondsTaken.toFixed(2)} seconds. Avg. ${(totalFrames / secondsTaken).toFixed(2)} fps`
         document.body.appendChild(output)
         console.log((t1 - t0) / 1000)
         return // all is read, no more payload bytes
@@ -76,7 +78,8 @@ button.addEventListener('click', function() {
       geometry.attributes.position.needsUpdate = true
 
       // Read again...
-      return reader.read().then(processResult)
+      return reader.read()
+        .then(processResult)
     })
 
   }).catch((err) => {
@@ -96,6 +99,7 @@ setTimeout(function resetStatusOutput() {
 
 requestAnimationFrame(function render() {
   requestAnimationFrame(render)
+  if(loadStarted) totalFrames++
   mesh.rotation.y += Math.PI / 200
   renderer.render(scene, camera)
 })
